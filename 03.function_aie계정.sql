@@ -264,7 +264,7 @@ FROM EMPLOYEE;
 SELECT EMP_NAME, HIRE_DATE, CEIL(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) 근무개월수
 FROM EMPLOYEE;
 
-SELECT EMP_NAME, HIRE_DATE, CEIL(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) || '개월  차' 근무개월수
+SELECT EMP_NAME, HIRE_DATE, CEIL(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)) || '개월 차' 근무개월수
 FROM EMPLOYEE;
 
 SELECT EMP_NAME, HIRE_DATE, CONCAT(CEIL(MONTHS_BETWEEN(SYSDATE, HIRE_DATE)), '개월차') 근무개월수
@@ -321,15 +321,15 @@ FROM EMPLOYEE;
 */
 -- 사워명, 입사년도, 입사월, 입사일 조회
 SELECT EMP_NAME,
-              EXTRACT(YEAR FROM HIRE_DATE) 입사년도,
-              EXTRACT(MONTH FROM HIRE_DATE) 입사월,
-              EXTRACT(DAY FROM HIRE_DATE) 입사일
+  EXTRACT(YEAR FROM HIRE_DATE) 입사년도,
+  EXTRACT(MONTH FROM HIRE_DATE) 입사월,
+  EXTRACT(DAY FROM HIRE_DATE) 입사일
 FROM EMPLOYEE
 ORDER BY 입사년도, 입사월, 입사일;
 
---===================================================================================
---                                                            <형변환 함수>
---===================================================================================
+--==============================================================================
+--                             <형변환 함수>
+--==============================================================================
 /*
     TO_CHAR : 숫자 또는 날짜의 값을 문자타입으로 변환
     
@@ -338,7 +338,7 @@ ORDER BY 입사년도, 입사월, 입사일;
         - 포맷 : 반환 결과를 특정 형식에 맞게 출력하도록 함
 */
 
----------------------------------------- 숫자 => 문자 --------------------------------------------
+------------------------------숫자 => 문자 --------------------------------------
 /*
     9 : 해당 자리의 숫자를 의미
         - 값이 없을 경우 소수점 이상은 공백, 소수점 이하는 0으로 표시
@@ -360,10 +360,10 @@ FROM EMPLOYEE;
 
 -- FM
 SELECT TO_CHAR(123.456, 'FM99990.999'),
-              TO_CHAR(1234.56, 'FM9990.99'),
-              TO_CHAR(0.1000, 'FM9990.999'),
-              TO_CHAR(0.1000, 'FM9990.00'),
-              TO_CHAR(0.1000, 'FM9999.999')
+      TO_CHAR(1234.56, 'FM9990.99'),
+      TO_CHAR(0.1000, 'FM9990.999'),
+      TO_CHAR(0.1000, 'FM9990.00'),
+      TO_CHAR(0.1000, 'FM9999.999')
     FROM DUAL;
     
 SELECT TO_CHAR(123.456, '99990.999'),
@@ -499,9 +499,9 @@ FROM EMPLOYEE;
 SELECT NULLIF('1234', '1234') FROM DUAL;
 SELECT NULLIF('1234', '5678') FROM DUAL;
 
---===================================================================================
---                                                            <선택 함수>
---===================================================================================
+--==============================================================================
+--                              <선택 함수>
+--==============================================================================
 /*
     DECODE(비교하고자하는 대상(컬럼|산술연산|함수식), 비교값1, 결과값1, 비교값2, 결과값2, ...)
     
@@ -532,19 +532,107 @@ SELECT EMP_NAME, JOB_CODE, SALARY 기존급여,
            SALARY*1.05) "인상된 급여"
  FROM EMPLOYEE;
 
+--------------------------------------------------------------------------------
+/*
+    CASE WHEN THEN
+    END
+    
+    CASE WHEN 조건식1 THEN 결과값1
+         WHEN 조건식2 THEN 결과값2
+         
+         ...
+         ELSE 결과값N
+    END
+*/
+-- 사원명, 급여, 급여가 5백만원 이상이면 '고급', 350만원 이상이면 '중급', 나머지는 '초급'
+SELECT EMP_NAME, SALARY
+    ,CASE WHEN SALARY >=5000000 THEN'고급'
+          WHEN SALARY >= 3500000 THEN'중급'
+          ELSE '초급'
+    END 급수
+FROM EMPLOYEE;
 
-------------------------    문제    ----------------------------
+--=============================================================================
+--                              <그룹함수>
+--=============================================================================
+/*
+    SUM(숫자타입의 컬럼) : 해당컬럼값들의 합계를 구해서 반환
+*/
+-- 전 사원의 총 급여액 조회
+SELECT SUM(SALARY) "총급여액"
+FROM EMPLOYEE;
 
---15. EMPLOYEE테이블에서 사원 명과 직원의 주민번호를 이용하여 생년, 생월, 생일 조회
---16. EMPLOYEE테이블에서 사원명, 주민번호 조회
---	(단, 주민번호는 생년월일만 보이게 하고, '-'다음 값은 '*'로 바꾸기)
---17. EMPLOYEE테이블에서 사원명, 입사일-오늘, 오늘-입사일 조회
---   (단, 각 별칭은 근무일수1, 근무일수2가 되도록 하고 모두 정수(내림), 양수가 되도록 처리)
---18. EMPLOYEE테이블에서 사번이 홀수인 직원들의 정보 모두 조회
---19. EMPLOYEE테이블에서 근무 년수가 20년 이상인 직원 정보 조회
---20. EMPLOYEE 테이블에서 사원명, 급여 조회 (단, 급여는 '\9,000,000' 형식으로 표시)
---21. EMPLOYEE테이블에서 직원 명, 부서코드, 생년월일, 나이 조회
---  (단, 생년월일은 주민번호에서 추출해서 00년 00월 00일로 출력되게 하며 
---   나이는 주민번호에서 출력해서 날짜데이터로 변환한 다음 계산)
---23. EMPLOYEE테이블에서 사번이 201번인 사원명, 주민번호 앞자리, 주민번호 뒷자리, 
---    주민번호 앞자리와 뒷자리의 합 조회
+-- 남자 사원의 총 급여액 조회
+SELECT SUM(SALARY)"남자사원의 총 급여액"
+FROM EMPLOYEE
+WHERE SUBSTR(EMP_NO,8,1)IN('1','3');
+
+-- 부서코드가 'D5'인 사원의 총 급여액 조회
+SELECT SUM(SALARY) "D5사원 총 급여액"
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5';
+
+-- 부서코드가 'D5'인 사원의 연봉(보너스포함)의 합계
+SELECT SUM(SALARY*NVL(BONUS,0)+SALARY) "D5사원의 연봉의 합계"
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5';
+
+-- 전 사원의 총 급여액 조회
+SELECT TO_CHAR(SUM(SALARY),'L999,999,999') "총 급여액"
+FROM EMPLOYEE;
+
+--=============================================================================
+/*
+    AVG(숫자타입컬럼) : 해당 컬럼 값들의 평균을 반환
+*/
+-- 전 사원의 평균 급여액 조회
+SELECT ROUND(AVG(SALARY),-1)"평균 급여액"
+FROM EMPLOYEE;
+
+SELECT ROUND(AVG(SALARY))"평균 급여액"
+FROM EMPLOYEE;
+
+SELECT ROUND(AVG(SALARY),2)"평균 급여액"
+FROM EMPLOYEE;
+
+--=============================================================================
+/*
+ MIN(모든타입컬럼) : 해당 컬럼값들 중에 가장 작은 값 반환
+ MAX(모든타입컬럼) : 해당 컬럼값들 중에 가장 큰 값 반환
+*/
+-- 이름중 가장 작은값(사전순), 급여중 가장 적게 받는 값, 입사일중 가장 먼저 입사한 날짜
+SELECT MIN(EMP_NAME), MIN(SALARY),MIN(HIRE_DATE)
+FROM EMPLOYEE;
+
+-- 이름중 가장 큰값(사전순), 급여중 가장 많이 받는 값, 입사일중 가장 나중에 입사한 날짜
+SELECT MAX(EMP_NAME), MAX(SALARY),MAX(HIRE_DATE)
+FROM EMPLOYEE;
+
+-------------------------------------------------------------------------------
+/*
+    COUNT(*|컬럼|DISRINCT 컬럼) : 행의 개수 반환
+    
+    COUNT(*) : 조회된 결과의 모든 행의 갯수 반환
+    COUNT(컬럼) : 제시한 컬럼의 NULL값을 제외한 행의 갯수 반환
+    COUNT(DISTINCT 컬럼) : 해당 컬럼값 중복을 제거한 후의 행의 갯수 반환
+*/
+-- 전체 사원 수 조회
+SELECT COUNT(*)
+FROM EMPLOYEE;
+
+-- 여성 사원 수 조회
+SELECT COUNT(*)
+FROM EMPLOYEE
+WHERE SUBSTR(EMP_NO,8,1)IN('2','4');
+
+-- 보너스 받는 사원 수 조회
+SELECT COUNT(BONUS)
+FROM EMPLOYEE;
+
+--부서 배치를 받은 사원수
+SELECT COUNT(DEPT_CODE)
+FROM EMPLOYEE;
+
+-- 현재 사원들이 총 몇개의 부서에 배치되었는지
+SELECT COUNT(DISTINCT DEPT_CODE)
+FROM EMPLOYEE;
