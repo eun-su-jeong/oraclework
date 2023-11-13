@@ -81,7 +81,7 @@ HAVING AVG(SALARY) >= 3000000;
 -- 1. 직급별 총 급여액(단, 직급별 급여합이 1000만원 이상인 직급만 조회)- 직급코드, 급여합
 
 SELECT DEPT_CODE 직급코드,SUM(SALARY) 급여합
-FROM EMPLOYEE
+FROM EMPLOYEE 
 GROUP BY DEPT_CODE
 HAVING SUM(SALARY)>=10000000;
 
@@ -185,3 +185,26 @@ WHERE DEPT_CODE ='D5' AND SALARY > 3000000;
 -- 집합연산자를 사용할 경우, 컬럼의 개수와 컬럼명이 동일 해야함
 
 ------------------------------ 3.UNION ALL ------------------------------------
+-- 부서코드가 'D5'인 사원 이면서 급여가 300만원 초과인 사원을 조회(중복값도 모두 출력)
+SELECT EMP_NAME,DEPT_CODE,SALARY 
+FROM EMPLOYEE
+WHERE DEPT_CODE ='D5'
+UNION ALL
+SELECT EMP_NAME,DEPT_CODE,SALARY 
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+--------------------------------- 3.MINUS -------------------------------------
+-- 부서코드가 'D5'인 사원들 중 급여가 300만원 초과인 사원을 제외한 사원 조회
+SELECT EMP_NAME,DEPT_CODE,SALARY 
+FROM EMPLOYEE
+WHERE DEPT_CODE ='D5'
+MINUS
+SELECT EMP_NAME,DEPT_CODE,SALARY 
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+-- 다음처럼도 가능
+SELECT EMP_NAME,DEPT_CODE,SALARY 
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5' AND SALARY <= 3000000;
