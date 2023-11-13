@@ -110,7 +110,7 @@ SELECT EMP_ID, EMP_NAME, RPAD(SUBSTR(EMP_NO,1,8),14,'*')
 FROM EMPLOYEE;
 
 SELECT EMP_ID, EMP_NAME, SUBSTR(EMP_NO,1,8) || '******'
-FROM EMPLOYEE;
+FROM EMPLOYEE;3
 
 --------------------------------------------------------------------------------------------------
 /*
