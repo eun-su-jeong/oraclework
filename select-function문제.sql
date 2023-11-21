@@ -17,11 +17,12 @@ WHERE LENGTH(PROFESSOR_NAME) != 3;
 --단 이때 나이가 적은 사람에서 많은 사람 순으로 화면에 출력되도록 만드시오. 
 --(단, 교수 중 2000년 이후 출생자는 없으며 출력 헤더는 "교수이름, "나이"로 한다. 나이는 
 --'만'으로 계산한다.)
---SELECT PROFESSOR_NAME 교수이름,
---EXTRACT(YEAR FROM SYSDATE-('19'||SUBSTR(PROFESSOR_SSN,1,2),'YYYYMMDD')/12)나이
---FROM TB_PROFESSOR
---WHERE SUBSTR(PROFESSOR_SSN, 8,1) = '1'
---ORDER BY 2;
+
+SELECT PROFESSOR_NAME 교수이름,EXTRACT(YEAR FROM SYSDATE) - ('19' || 
+SUBSTR(PROFESSOR_SSN, 1, 2)) 나이
+FROM TB_PROFESSOR
+WHERE SUBSTR(PROFESSOR_SSN, 8,1) = '1'
+ORDER BY 2;
 
 --4. 교수들의 이름 중 성을 제외한 이름만 출력하는 SQL문장을 작성하시오. 출력 헤더는 "이름"
 -- 이 찍히도록한다.(성이 2자인 경우의 교수는 없다고 가정하시오)
@@ -34,8 +35,6 @@ ORDER BY 1;
 SELECT STUDENT_NO,STUDENT_NAME
 FROM TB_STUDENT
 WHERE EXTRACT(YEAR FROM ENTRANCE_DATE) 입학년도;
-
-
 
 
 -- 9. 학번이 A517178 인 한아름 학생의 학점 총 평점을 구하는 SQL문을 작성하시오. 단, 이때

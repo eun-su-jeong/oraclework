@@ -6,7 +6,7 @@
 SELECT SUM(SALARY)
 FROM EMPLOYEE; -- 전체 사원을 하나의 그룹으로 묶어서 촐함을 구함
 
--- 각 붓4ㅓ멸 총 급여합 조회
+-- 각 부서별 총 급여합 조회
 SELECT DEPT_CODE,SUM(SALARY)
 FROM EMPLOYEE
 GROUP BY DEPT_CODE;

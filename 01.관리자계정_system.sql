@@ -46,5 +46,11 @@ create user workbook identified by workbook;
 grant RESOURCE, CONNECT to workbook;
 alter user workbook default TABLESPACE users quota UNLIMITED on users;
 
+-- DDL사용자계정만들기
+ALTER SESSION set "_oracle_script" = true;
+create user DDL identified by ddl;
+grant RESOURCE, CONNECT to DDL;
+alter user DDL default TABLESPACE users quota UNLIMITED on users;
+
 
 
